@@ -10,9 +10,9 @@ down_message="NO CONNECTION"
 while true; do
   configured_ip_addresses="$((ifconfig | \
     grep -iEo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | \
-    grep -vi '127.0.0.1' | tr '\n' ' ') || echo NONE)"
+    grep -vi '127.0.0.1' | tr '\n' ' ') || echo 'NONE')"
   externally_visible_ip_address="$(curl -m 1 ipinfo.io/ip 2>/dev/null || echo $down_message)"
-  computed_state="Public: $externally_visible_ip_address, Internal: $configured_ip_addresses"
+  computed_state="Public: $externally_visible_ip_address\nWiFi:   $configured_ip_addresses"
   
   statefile="/tmp/net-watcher.state"
   
@@ -22,7 +22,7 @@ while true; do
     existing_chksum="$(md5 "${statefile}" | awk '{print $NF}')"
     if [[ "${new_chksum}" != "${existing_chksum}" ]]; then
 
-	if [[ "$externally_visible_ip" != "$down_message" ]]; then
+	if [[ "$externally_visible_ip_address" != "$down_message" ]]; then
             state="UP"
 	else
 	    state="DOWN"
