@@ -12,7 +12,7 @@ while true; do
     grep -iEo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | \
     grep -vi '127.0.0.1' | tr '\n' ' ') || echo NONE)"
   externally_visible_ip_address="$(curl -m 1 ipinfo.io/ip 2>/dev/null || echo $down_message)"
-  computed_state="Actual:  $externally_visible_ip_address, Configured: $configured_ip_addresses"
+  computed_state="Public: $externally_visible_ip_address, Internal: $configured_ip_addresses"
   
   statefile="/tmp/net-watcher.state.test"
   
