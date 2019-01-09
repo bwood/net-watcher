@@ -12,14 +12,15 @@ while true; do
   externally_visible_ip_address="$(curl -m 1 ipinfo.io/ip 2>/dev/null || echo NO_CONNECTIVITY)"
   computed_state="Actual:  $externally_visible_ip_address, Configured: $configured_ip_addresses"
   
-  statefile="/tmp/net-watcher.state"
+  statefile="/tmp/net-watcher.state.test"
   if [ -f $statefile ]; then
     echo "$computed_state" > "${statefile}-new"
     new_chksum="$(md5 "${statefile}-new" | awk '{print $NF}')"
     existing_chksum="$(md5 "${statefile}" | awk '{print $NF}')"
     if [[ "${new_chksum}" != "${existing_chksum}" ]]; then
-      mv "${statefile}-new" "${statefile}"
-      osascript -e "display notification \"$(cat $statefile)\" with title \"ALERT: Network Changed\" sound name \"Tink\""
+	mv "${statefile}-new" "${statefile}"
+	timestamp=$(date "+%H:%M:%S")
+	osascript -e "display notification \"$(cat $statefile)\" with title \"Network: $timestamp\" sound name \"Tink\""
     else
       rm "${statefile}-new"
     fi
