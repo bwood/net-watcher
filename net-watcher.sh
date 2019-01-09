@@ -14,7 +14,7 @@ while true; do
   externally_visible_ip_address="$(curl -m 1 ipinfo.io/ip 2>/dev/null || echo $down_message)"
   computed_state="Public: $externally_visible_ip_address, Internal: $configured_ip_addresses"
   
-  statefile="/tmp/net-watcher.state.test"
+  statefile="/tmp/net-watcher.state"
   
   if [ -f $statefile ]; then
     echo "$computed_state" > "${statefile}-new"
